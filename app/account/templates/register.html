@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title> ToDo List</title>
+  {% load bootstrap5 %}
+  {% bootstrap_css %}
+  {% bootstrap_javascript %}
+<style>
+    h2{
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        margin: 70px;
+    }
+</style>
+</head>
+    <h2>Welcome to ToDo List App</h2>
+<body>
+<div class="container">
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <form method="POST" action="">
+                  {% csrf_token %}
+                <div class="mb-3">
+                    <label for="exampleInputEmail" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail">
+                      <div class="form-error">{{ form.email.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputUsername" class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" id="exampleInputUsername">
+                      <div class="form-error">{{ form.username.errors }}</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword" class="form-label">Password</label>
+                    <input type="password" name="password1" class="form-control" id="exampleInputPassword">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword2" class="form-label">Repeat password</label>
+                    <input type="password" name="password2" class="form-control" id="exampleInputPassword2">
+                      <div class="form-error">{{ form.password2.errors }}</div>
+                </div>
+
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button type="submit" class="btn btn-warning">Submit</button>
+                </div>
+            </form>
+            <br>
+            <div class="d-grid  col-4 mx-auto">
+                <a href="{% url 'login' %}">Back to Login</a>
+            </div>
+            <div class="d-grid  col-4 mx-auto">
+                <a href="{% url 'home' %}">Main page</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<div class="categories">
+    <nav id="sidebarMenu" class="col-lg-10 mb-4">
+      <div class="pt-3">
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between ">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
+                  All
+                </a>
+            </li>
+             {% for category in categories %}
+                 <li class="list-group-item d-flex justify-content-between">
+                    <a class="nav-link active" aria-current="page" href="{{category.get_absolute_url}}">
+                    {{ category.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+      </div>
+    </nav>
+</div>
