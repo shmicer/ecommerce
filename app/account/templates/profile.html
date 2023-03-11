@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit your account{% endblock %}
+
+{% block content %}
+        <h1>Your account</h1>
+    <div>
+
+            <p>{{ user.first_name }}</p>
+            <p>{{ user.last_name }}</p>
+            <p>{{ user.username }}</p>
+            <p>{{ user.email }}</p>
+            <br>
+            <a class="btn btn-warning me-md-2" href="{% url 'edit_profile' %}">Edit profile</a>
+    </div>
+            <h3>Your orders</h3>
+    <div class="box-element">{% for order in orders %}
+        <div class="cart-row">
+                    <div style="flex:2"><a style="text-decoration: none;" href="{% url 'order_info' %}">Order: {{ order.id }}</a></div>
+                    <div style="flex:1"><p> {{ order.status }}</p></div>
+                    <div style="flex:1"><p> ₽ {{ order.total_cost }}</p></div>
+                    <div >
+
+                    </div>
+                </div>
+        <hr>
+    {% endfor %}
+    </div>
+{% endblock %}

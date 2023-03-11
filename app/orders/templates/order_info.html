@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<h1>Checkout</h1>
+    {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
+    <div class="home-container-order">
+    <div></div>
+        <div class="row">
+        <div class="col-lg-8">
+            <div class="box-element">
+                <a  class="btn btn-outline-dark" href="{% url 'profile' %}"> Back to Profile</a>
+                <hr>
+                <h3>Order {{ order.id }}</h3>
+                <hr>
+                {% for item in cart %}
+                <div class="cart-row">
+                    <div style="flex:2"><img class="row-image" src="{{ item.product.image_url }}"></div>
+                    <div style="flex:2"><p>{{ item.product.name }}</p></div>
+                    <div style="flex:1"><p>₽ {{ item.price|floatformat:0 }}</p></div>
+                    <div style="flex:1"><p>{{ item.quantity }}</p></div>
+                </div>
+                {% endfor %}
+                <h5>Items:   {{ cart|length }}</h5>
+                <h5>Total:   ₽ {{ cart.get_total_price|floatformat:0 }}</h5>
+            </div>
+        </div>
+
+    </div>
+        <div></div>
+    </div>
+{% endblock content %}

@@ -9,7 +9,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('cart', include('cart.urls')),
     path('orders/', include('orders.urls')),
-    path('account', include('account.urls')),
+    path('account/', include('account.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
 ]
 

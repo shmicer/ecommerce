@@ -38,13 +38,16 @@
                     {% csrf_token %}
                     <div id="user-info">
                         <div class="form-field">
-                            <input required class="form-control" type="text" name="first_name" placeholder="First name..">
+                            <input required class="form-control" type="text" name="first_name" placeholder="First name.." value="{{ request.user.first_name }}">
                         </div>
                         <div class="form-field">
-                            <input required class="form-control" type="text" name="last_name" placeholder="Last name..">
+                            <input required class="form-control" type="text" name="last_name" placeholder="Last name.." value="{{ request.user.last_name }}">
                         </div>
                         <div class="form-field">
-                            <input required class="form-control" type="email" name="email" placeholder="Email..">
+                            <input required class="form-control" type="email" name="email" placeholder="Email.." value="{{ request.user.email }}">
+                        </div>
+                        <div class="form-field">
+                            <input required class="form-control" type="text" name="total_cost" hidden="hidden" value="{{ cart.get_total_price }}">
                         </div>
                     </div>
 

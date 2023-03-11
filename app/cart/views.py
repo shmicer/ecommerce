@@ -23,7 +23,7 @@ def add_to_cart(request, product_id):
         messages.success(request, 'Success')
     else:
         messages.info(request, 'NoSuccess')
-    return redirect('cart')
+    return redirect('home')
 
 
 def remove_from_cart(request, product_id):
