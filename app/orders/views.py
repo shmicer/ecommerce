@@ -25,5 +25,3 @@ def create_order(request):
     return render(request, 'create.html', {'cart': cart, 'form': form})
 
 
-def order_detail(request):
-    return render(request, 'order_info.html')
