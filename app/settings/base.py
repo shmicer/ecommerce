@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'orders',
     'account',
     'debug_toolbar',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -41,10 +42,27 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+FACEBOOK_APP_ID = 'app_id'
+FACEBOOK_API_SECRET = 'secret_token'
+
+# Настройки для Вконтакте
+SOCIAL_AUTH_VK_OAUTH2_KEY = '51580731'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = 'IndBoqUCdZecpYZACLnv'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_SECRET')
+
 ROOT_URLCONF = 'urls'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+LOGIN_URL = '/login/google-oauth2/'
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
 
 CART_SESSION_ID = 'cart'
 
@@ -65,12 +83,26 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'wsgi.application'
+
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -105,6 +137,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'account.authentication.EmailBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.vk.VKOAuth2',
+
+)
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

@@ -24,7 +24,7 @@
           </ul>
           <div class="form-inline my-2 my-lg-0">
 	     	{% if user.is_authenticated %}
-                  <span>Welcome, {{ user }} </span>
+                  <span>Welcome, {{ user.first_name }} </span>
                 <a class="btn btn-warning me-md-2" href="{% url 'profile' %}">Profile</a>
                   <a class="btn btn-warning me-md-2" href="{% url 'logout' %}">Logout</a>
 
