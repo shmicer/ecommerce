@@ -39,8 +39,9 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True, editable=False)
     category = models.ForeignKey('core.Category', on_delete=models.SET_NULL, null=True)
     manufacturer = models.ForeignKey('core.Manufacturer', on_delete=models.SET_NULL, null=True)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True)
+    is_featured = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

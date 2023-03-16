@@ -1,0 +1,49 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col col-sm-6 col-lg-4 col-xl-3">
+            <div class="form-check">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                  <div class="mb-3">
+                    <label for="exampleInputUsername" class="form-label">Email</label>
+                    <input type="text" name="username" class="form-control" id="exampleInputUsername">
+                      <div class="form-error">{{ form.username.errors }}</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputPassword" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword">
+                      <div class="form-error">{{ form.password.errors }}</div>
+                  </div>
+                    <div class="col-3 mx-auto">
+                        <button type="submit" class="btn btn-warning float-right">Submit</button>
+                    </div>
+                </form>
+                <br>
+                <br>
+                <div class="col-6 mx-auto">
+                    <small>Haven't signed up yet?</small>
+                    <br>
+                </div>
+                <div class="col-4 mx-auto">
+                    <a href="{% url 'register' %}">Sign Up</a>
+                </div>
+                <br>
+                <div class="col-6 mx-auto">
+                    <a href="{% url 'password_reset' %}">Reset Password</a>
+                </div>
+                <br>
+                <div class="col-6 mx-auto">
+                        <a class="btn btn-outline-danger" href="{% url "social:begin" "google-oauth2" %}">Login With Google</a>
+                    <br>
+                    <br>
+                        <a class="btn btn-outline-danger" href="{% url 'social:begin' 'vk-oauth2' %}">Login with VK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}

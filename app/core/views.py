@@ -1,27 +1,17 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView
-from .models import Product, Category
+from .models import Product, Category, Manufacturer
 from cart.forms import CartAddProductForm
 
 
 class HomeView(ListView):
     model = Product
-    context_object_name = 'items'
     template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = Category.objects.all()
-        context['cart_product_form'] = CartAddProductForm()
-        context['title'] = 'Sample Store'
+        context['items'] = Product.objects.filter(is_featured=True)
         return context
-
-    def get_queryset(self):
-        try:
-            self.category = Category.objects.get(name=self.kwargs['category'])
-            return Product.objects.filter(category__name=self.category)
-        except:
-            return Product.objects.all()
 
 
 class ProductDetailView(DetailView):
@@ -30,9 +20,31 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cart_product_form'] = CartAddProductForm()
         return context
 
 
 def checkout(request):
     return render(request, 'create.html')
+
+
+class CategoryView(ListView):
+    model = Category
+    context_object_name = 'categories'
+    template_name = 'category_list.html'
+
+class BrandView(ListView):
+    model = Manufacturer
+    context_object_name = 'brands'
+    template_name = 'brand_list.html'
+
+
+class ProductView(ListView):
+    model = Product
+    context_object_name = 'items'
+    template_name = 'product_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cats'] = context['items'].distinct().values('category__name')
+        context['brands'] = context['items'].distinct().values('manufacturer__name')
+        return context

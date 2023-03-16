@@ -59,7 +59,6 @@ ROOT_URLCONF = 'urls'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-LOGIN_URL = '/login/google-oauth2/'
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
@@ -138,11 +137,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = (
-    'account.authentication.EmailBackend',
+    # 'account.authentication.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.vk.VKOAuth2',
 
 )
+
+AUTH_USER_MODEL = 'account.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 

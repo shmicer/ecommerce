@@ -1,25 +1,25 @@
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from django.contrib.auth.models import User
-from .models import Customer
+
+from django.utils.translation import gettext_lazy as _
 
 
-class RegisterUserForm(UserCreationForm):
-    email = forms.CharField(label='Email')
-    username = forms.CharField(label='Username')
-    first_name = forms.CharField(label='First name')
-    last_name = forms.CharField(label='Last name')
-    password1 = forms.CharField(label='Password')
-    password2 = forms.CharField(label='Repeat password')
+User = get_user_model()
 
-    class Meta:
+class UserCreationForm(UserCreationForm):
+    email = forms.EmailField(
+        label=_('Email'),
+        max_length=254,
+        widget=forms.EmailInput(attrs={'autocomplete': 'email'}),
+    )
+    class Meta(UserCreationForm.Meta):
         model = User
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = [ 'email']
 
-
-class LoginUserForm(forms.Form):
-    username = forms.CharField(label='Username')
-    password = forms.CharField(label='Password')
+# class LoginUserForm(forms.Form):
+#     username = forms.CharField(label='Username')
+#     password = forms.CharField(label='Password')
 
 
 class UserEditForm(forms.ModelForm):

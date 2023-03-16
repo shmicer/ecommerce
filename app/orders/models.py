@@ -1,10 +1,11 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 
 
 # Create your models here.
 class Order(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -25,6 +26,9 @@ class Order(models.Model):
     def __str__(self):
         return 'Order {}'.format(self.id)
 
+    def get_total_items(self):
+        return sum(item.quantity for item in self.items.all())
+
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
 
@@ -40,3 +44,5 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
+
+
