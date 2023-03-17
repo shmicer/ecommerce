@@ -1,4 +1,6 @@
+from django.http import JsonResponse
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView
 from .models import Product, Category, Manufacturer
 from cart.forms import CartAddProductForm
@@ -45,8 +47,20 @@ class ProductView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filters'] = context['items'].distinct().values('category__name', 'manufacturer__name')
-        context['cats'] = set([item['category__name'] for item in context['filters']])
-        context['brands'] = set([item['manufacturer__name'] for item in context['filters']])
-        # при фильтрации проверить работает ли id
+        context['cats'] = context['items'].distinct().values('category__name', 'category__id')
+        # context['brands'] = context['items'].distinct().values('manufacturer__name', 'manufacturer__id')
         return context
+
+
+def filter_data(request):
+    cats = request.GET.getlist('category[]')
+    # brands = request.GET.getlist('manufacturer[]')
+    all_products = Product.objects.all()
+    if len(cats) > 0:
+        all_products = all_products.filter(category_id__in=cats).distinct()
+    else:
+        all_products = Product.objects.all()
+    # if len(brands) > 0:
+    #     all_products = all_products.filter(manufacturer__id__in=brands).distinct()
+    t=render_to_string('ajax/product-list.html', {'items': all_products})
+    return JsonResponse({'items': t})
