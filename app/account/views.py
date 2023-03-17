@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
@@ -53,12 +54,15 @@ class OrdersView(LoginRequiredMixin, ListView):
         context['orders'] = Order.objects.filter(customer=self.request.user).select_related('customer')
         return context
 
+class OrderView(LoginRequiredMixin, DetailView):
+    model = Order
+    template_name = 'profile/order-items.html'
 
-def order_view(request, pk):
-    order = get_object_or_404(Order, customer=request.user, pk=pk)
-    order_items = order.items.all().select_related('product')
-    context = {'order': order, 'order_items': order_items}
-    return render(request, 'profile/order-items.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['order_items'] = context['order'].items.select_related('product')
+        context['items_count'] = sum([item.quantity for item in context['order_items']])
+        return context
 
 
 def edit_user(request):

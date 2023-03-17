@@ -45,6 +45,8 @@ class ProductView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cats'] = context['items'].distinct().values('category__name')
-        context['brands'] = context['items'].distinct().values('manufacturer__name')
+        context['filters'] = context['items'].distinct().values('category__name', 'manufacturer__name')
+        context['cats'] = set([item['category__name'] for item in context['filters']])
+        context['brands'] = set([item['manufacturer__name'] for item in context['filters']])
+        # при фильтрации проверить работает ли id
         return context

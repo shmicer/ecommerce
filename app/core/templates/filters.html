@@ -33,8 +33,8 @@
 				<div class="list-group list-group-flush">
 					{% for cat in cats %}
 					<li class="list-group-item">
-						<input class="filter-checkbox" data-filter="category" value="{{cat.category__id}}" type="checkbox" />&nbsp;
-						{{cat.category__name}}
+						<input class="filter-checkbox" data-filter="category" value="{{cat.id}}" type="checkbox" />&nbsp;
+						{{cat}}
 					</li>
 					{% endfor %}
 				</div>
@@ -45,8 +45,8 @@
 				<div class="list-group list-group-flush">
 					{% for brand in brands %}
 					<li class="list-group-item">
-						<input class="filter-checkbox" data-filter="brand" value="{{brand.manufacturer__id}}" type="checkbox" />&nbsp;
-						{{brand.manufacturer__name}}
+						<input class="filter-checkbox" data-filter="brand" value="{{brand.id}}" type="checkbox" />&nbsp;
+						{{brand}}
 					</li>
 					{% endfor %}
 				</div>

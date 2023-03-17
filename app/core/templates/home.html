@@ -41,25 +41,26 @@
 		<div class="col-md-3 mb-4">
             <div class="product-card">
                 <div class="product-thumb">
-                            <a href="{{ item.get_absolute_url }}"><img src="{{ item.image_url }}" alt=""></a>
-                        </div>
-                <div class="product-details">
-                    <h6><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h6>
-                    <p>{{ item.description }}</p>
-                    <h6>$ <span>{{ item.price|floatformat:0 }}</span> ₽</h6>
-                    <div class="card-footer">
-                        <form class="form-select" action="{{ item.get_add_to_cart_url }}" method="post">
-                            {% csrf_token %}
-                                <input type="text" name="quantity" hidden="hidden" value="1">
-                            <button class="tn btn-sm btn-primary add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></button>
-                            <span class="float-right">
-                                4.5/5
-                                <i class="fa fa-star text-warning"></i>
-                            </span>
-                        </form>
+                    <a href="{{ item.get_absolute_url }}"><img src="{{ item.image_url }}" alt=""></a>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title"><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h5>
+                    <p class="card-text">{{ item.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><span>{{ item.price|floatformat:0 }}</span> ₽</li>
+                </ul>
+                <div class="card-footer">
+                    <form action="{{ item.get_add_to_cart_url }}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="quantity" hidden="hidden" value="1"><button class="tn btn-sm btn-primary add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></button>
+
+                    </form>
 {#                                <button class="btn btn-sm btn-primary add-to-cart" data-index="{{product.id}}"><i class="fa fa-shopping-cart"></i></button>#}
 {#                                <button class="btn btn-sm btn-danger"><i class="fa fa-heart"></i></button>#}
-                    </div>
+
+
+
                 </div>
             </div>
         </div>

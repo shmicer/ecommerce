@@ -15,7 +15,7 @@ urlpatterns = [
     path('edit/', views.edit_user, name='edit_profile'),
     path('profile', views.ProfileView.as_view(), name='profile'),
     path('orders/', views.OrdersView.as_view(), name='orders'),
-    path('order/<int:pk>', views.order_view, name='order_info')
+    path('order/<int:pk>', views.OrderView.as_view(), name='order_info')
 
 
 

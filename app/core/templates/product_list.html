@@ -11,12 +11,13 @@
 			<!-- Products -->
 			<h3 class="mb-4 border-bottom pb-1">
 				Products
+{#                {{ brands }}#}
 			</h3>
 			<div class="row" id="filteredProducts">
 {#				<p class="ajaxLoader">Loading...</p>#}
 				{% for item in items %}
 				<div class="col-lg-4 col-md-6 mb-4 product-box">
-					<div class="product-card">
+					<div class="product-card h-100">
                         <div class="product-thumb">
                             <a href="{{ item.get_absolute_url }}"><img src="{{ item.image_url }}" alt=""></a>
                         </div>
@@ -25,7 +26,7 @@
                             <p>{{ item.description }}</p>
                             <h6><span>{{ item.price|floatformat:0 }}</span> ₽</h6>
                             <div class="card-footer">
-                                <form class="form-select" action="{{ item.get_add_to_cart_url }}" method="post">
+                                <form action="{{ item.get_add_to_cart_url }}" method="post">
                                     {% csrf_token %}
                                         <input type="text" name="quantity" hidden="hidden" value="1">
                                     <button class="tn btn-sm btn-primary add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></button>

@@ -31,7 +31,7 @@
 							<td></td>
 						</tr>
 						{% endfor %}
-                        <h5>Items:  {{ order.get_total_items }} </h5>
+                        <h5>Items:  {{ items_count }} </h5>
                         <h5>Total:   ₽ {{ order.total_cost|floatformat:0 }}</h5>
 					</tbody>
 				</table>
