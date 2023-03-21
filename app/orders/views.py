@@ -5,9 +5,18 @@ from .forms import OrderCreateForm
 
 from cart.cart import Cart
 
+from account.models import Address
+
+
+
+def checkout(request):
+    return render(request, 'create.html')
+
 
 def create_order(request):
     cart = Cart(request)
+    addresses = Address.objects.filter(owner=request.user, is_pickpoint=False)
+    pickpoints = Address.objects.filter(is_pickpoint=True)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
@@ -17,11 +26,13 @@ def create_order(request):
                 OrderItem.objects.create(product=item['product'],
                                          price=item['price'],
                                          order_id=order.id,
-                                         quantity=item['quantity'])
+                                         quantity=item['quantity'],
+                                         total=item['price'] * item['quantity'])
             cart.clear()
             return render(request, 'created.html', {'order': order})
     else:
         form = OrderCreateForm
-    return render(request, 'create.html', {'cart': cart, 'form': form})
+    context = {'cart': cart,'form': form, 'pickpoints': pickpoints, 'addresses': addresses}
+    return render(request, 'create.html', context=context)
 
 

@@ -1,17 +1,17 @@
 
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import Count
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
-from .forms import UserCreationForm, UserEditForm
+from .forms import UserCreationForm, UserEditForm, AddressForm
 
 from orders.models import Order
+
+from .models import Address
 
 
 class RegisterUser(View):
@@ -38,7 +38,7 @@ class RegisterUser(View):
 
 class ProfileView(LoginRequiredMixin, ListView):
     model = User
-    template_name = 'profile/dashboard.html'
+    template_name = 'account/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,7 +47,7 @@ class ProfileView(LoginRequiredMixin, ListView):
 
 class OrdersView(LoginRequiredMixin, ListView):
     model = Order
-    template_name = 'profile/orders.html'
+    template_name = 'account/orders.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,13 +56,48 @@ class OrdersView(LoginRequiredMixin, ListView):
 
 class OrderView(LoginRequiredMixin, DetailView):
     model = Order
-    template_name = 'profile/order-items.html'
+    template_name = 'account/order-items.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['order_items'] = context['order'].items.select_related('product')
+        context['delivery_type'] = 'Address Delivery' if not context['order'].address.is_pickpoint else 'Pickpoint Delivery'
+        context['address'] = context['order'].address.address
         context['items_count'] = sum([item.quantity for item in context['order_items']])
         return context
+
+
+class AddressView(LoginRequiredMixin, ListView):
+    model = Address
+    context_object_name = 'addresses'
+    template_name = 'account/addressbook.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['addresses'] = context['addresses'].filter(is_pickpoint=False, owner=self.request.user)
+        return context
+
+class AddAddressView(LoginRequiredMixin, CreateView):
+    model = Address
+    template_name = 'account/address-form.html'
+    fields = ['address', 'city', 'postcode']
+    success_url = reverse_lazy('addresses')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        self.object.owner.add(self.request.user)
+        return super().form_valid(form)
+
+
+
+class UpdateAddressView(LoginRequiredMixin, UpdateView):
+    model = Address
+    template_name = 'account/address-form.html'
+    fields = ['address', 'city', 'postcode']
+    success_url = reverse_lazy('addresses')
+
+    def form_valid(self, form):
+        return super().form_valid(form)
 
 
 def edit_user(request):
@@ -70,11 +105,11 @@ def edit_user(request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
         if user_form.is_valid():
             user_form.save()
-            return redirect('profile')
+            return redirect('account')
     else:
         user_form = UserEditForm(instance=request.user)
         return render(request,
-                      'profile/edit_profile.html',
+                      'account/edit-profile.html',
                       {'user_form': user_form})
 
 

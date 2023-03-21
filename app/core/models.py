@@ -60,7 +60,7 @@ class Product(models.Model):
         return reverse('add_to_cart', kwargs={'product_id': self.pk})
 
     def get_remove_from_cart_url(self):
-        return reverse('remove_from_cart', kwargs={'product_id': self.pk})
+        return reverse('cart', kwargs={'product_id': self.pk})
 
     def get_increase_quantity(self):
         return reverse('increase_quantity', kwargs={'product_id': self.pk})

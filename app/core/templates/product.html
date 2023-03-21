@@ -46,7 +46,8 @@
                 <form action="{{ product.get_add_to_cart_url }}" method="post">
                     {{ cart_product_form }}
                     {% csrf_token %}
-                    <input type="submit" value="Add to cart">
+                    <input type="text" name="quantity" hidden="hidden" value="1">
+                    <button class="btn btn-primary" type="submit">Add to Cart</button>
                 </form>
 {#            <a href="{{ product.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p">#}
 {#              Add to cart#}

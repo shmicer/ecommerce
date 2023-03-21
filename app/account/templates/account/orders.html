@@ -6,7 +6,7 @@
 	<h3 class="my-4 border-bottom pb-1">My Orders</h3>
 	<div class="row">
 		<div class="col-md-3">
-			{% include 'profile/user-sidebar.html' %}
+			{% include 'account/user-sidebar.html' %}
 		</div>
 		<div class="col-md-9">
 			<div class="table-responsive">
@@ -22,8 +22,8 @@
 					<tbody>
 						{% for order in orders %}
 						<tr>
-							<td><a href="{% url 'order_info' order.id %}" class="btn btn-sm btn-dark">Order {{order.id}}</a></td>
-							<td>₽ {{ order.total_cost }}</td>
+							<td><a href="{% url 'order-info' order.id %}" class="btn btn-sm btn-dark">Order {{order.id}}</a></td>
+							<td>{{ order.total_cost|floatformat:0 }} ₽</td>
 							<td>{{ order.status }}</td>
 							<td>{{order.created}}</td>
 						</tr>

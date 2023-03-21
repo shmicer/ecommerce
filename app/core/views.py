@@ -25,9 +25,6 @@ class ProductDetailView(DetailView):
         return context
 
 
-def checkout(request):
-    return render(request, 'create.html')
-
 
 class CategoryView(ListView):
     model = Category
@@ -51,6 +48,10 @@ class ProductView(ListView):
         # context['brands'] = context['items'].distinct().values('manufacturer__name', 'manufacturer__id')
         return context
 
+def search(request):
+    q = request.GET['q']
+    products = Product.objects.filter(name__icontains=q)
+    return render(request, 'search.html', {'products':products})
 
 def filter_data(request):
     cats = request.GET.getlist('category[]')
@@ -58,8 +59,6 @@ def filter_data(request):
     all_products = Product.objects.all()
     if len(cats) > 0:
         all_products = all_products.filter(category_id__in=cats).distinct()
-    else:
-        all_products = Product.objects.all()
     # if len(brands) > 0:
     #     all_products = all_products.filter(manufacturer__id__in=brands).distinct()
     t=render_to_string('ajax/product-list.html', {'items': all_products})
