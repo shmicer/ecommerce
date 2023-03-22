@@ -1,7 +1,7 @@
-from django.contrib import messages
 from django.shortcuts import render
 from .models import OrderItem
 from .forms import OrderCreateForm
+from django.core.mail import send_mail
 
 from cart.cart import Cart
 
@@ -22,6 +22,13 @@ def create_order(request):
         if form.is_valid():
             form.instance.customer = request.user
             order = form.save()
+            send_mail(
+                f'Order {order.id}',
+                'Here is the message.',
+                'from@example.com',
+                [order.email],
+                fail_silently=False,
+            )
             for item in cart:
                 OrderItem.objects.create(product=item['product'],
                                          price=item['price'],

@@ -31,6 +31,7 @@ class Order(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey('orders.Order', related_name='items', on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey('core.Product', related_name='order_items', on_delete=models.SET_NULL, null=True)

@@ -6,7 +6,7 @@ from django import forms
 
 from django.utils.translation import gettext_lazy as _
 
-from .models import Address, PickPoint
+from .models import Address
 
 User = get_user_model()
 
@@ -20,9 +20,6 @@ class UserCreationForm(UserCreationForm):
         model = User
         fields = ['email']
 
-# class LoginUserForm(forms.Form):
-#     username = forms.CharField(label='Username')
-#     password = forms.CharField(label='Password')
 
 class UserEditForm(forms.ModelForm):
     class Meta:

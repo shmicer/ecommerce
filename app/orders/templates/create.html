@@ -66,29 +66,23 @@
                     <div class="tab-content py-3 mt-2">
                         <div class="tab-pane active" id="pill-tabpanel-0" role="tabpanel" aria-labelledby="pill-tab-0">
                             <hr>
-                            {% if user.is_authenticated %}
-                                <div class="form-field">
-                                    <p>Address Delivery:</p>
-                                    <select class="form-select" name="address">
-                                        <option selected>Please select an address</option>
-                                        {% for address in addresses %}
-                                            <option value="{{ address.id }}">{{ address.address }}, {{ address.city }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                            <div class="form-field" id="pill-tabpanel-0" role="tabpanel" aria-labelledby="pill-tab-0">
+                                <p>Address Delivery:</p>
+                                <select class="form-select" name="address">
+                                    <option selected>Please select an address</option>
+                                    {% for item in addresses %}
+                                        <option value="{{ item.id }}">{{ item.address }}, {{ item.city }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
                                 <span><a href="{% url 'add-address' %}" class="float-right btn btn-sm btn-success">Add address</a></span>
                                 <br>
-                            {% else %}
-                                <div class="form-field" >
-                                    <input class="form-control" type="text" name="address" placeholder="Address..">
-                                </div>
-                            {% endif %}
                         </div>
                         <div class="tab-pane" id="pill-tabpanel-1" role="tabpanel" aria-labelledby="pill-tab-1">
                             <hr>
                             <div class="form-field">
                                 <p>Pickpoint Delivery:</p>
-                                <select class="form-select" name="address">
+                                <select class="form-select" id="pickpoint" name="">
                                     <option selected>Please select a pickpoint</option>
                                     {% for item in pickpoints %}
                                         <option value="{{ item.id }}">Pickpoint: {{ item.address }}, {{ item.id }}</option>
@@ -110,4 +104,17 @@
     </div>
         <div></div>
     </div>
+{#    This script select the name attribute in pickpoint form to aviod the collision of two equal name attributes of both forms#}
+    <script>
+        let select = document.getElementById('pickpoint');
+        let btnAdd = document.getElementById('pill-tab-1');
+        let btnRem = document.getElementById('pill-tab-0');
+
+        btnAdd.onclick = function() {
+            select.name = 'address';
+        }
+        btnRem.onclick = function() {
+            select.name -= 'address';
+        }
+    </script>
 {% endblock content %}

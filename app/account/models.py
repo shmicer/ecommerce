@@ -11,8 +11,6 @@ class User(AbstractUser):
         _('email address'),
         unique=True,
         blank=True)
-    current_address = models.OneToOneField('account.Address' , on_delete=models.CASCADE, null=True)
-    current_pickpoint = models.OneToOneField('account.PickPoint', on_delete=models.CASCADE, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -24,13 +22,6 @@ class Address(models.Model):
     is_current = models.BooleanField(default=False)
     is_pickpoint = models.BooleanField(default=False)
     owner = models.ManyToManyField('account.User', blank=True)
-
-    def __str__(self):
-        return '{}'.format(self.id)
-
-class PickPoint(models.Model):
-    address = models.ForeignKey('account.Address', on_delete=models.CASCADE)
-    city = models.CharField(max_length=200)
 
     def __str__(self):
         return '{}'.format(self.id)
