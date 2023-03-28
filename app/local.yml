@@ -1,0 +1,32 @@
+version: '3.11'
+
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: compose/local/django/Dockerfile
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "50800:8000"
+      - "4666:4444"
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
+
+  db:
+    image: postgres:13.0-alpine
+    ports:
+      - "30333:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .envs/.local/.postgres
+
+volumes:
+  postgres_data: {}

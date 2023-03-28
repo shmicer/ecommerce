@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 
 from . import views
 
@@ -13,10 +13,5 @@ urlpatterns = [
     path('my-addressbook/', views.AddressView.as_view(), name='addresses'),
     path('add-address/', views.AddAddressView.as_view(), name='add-address'),
     path('edit-address/<int:pk>', views.UpdateAddressView.as_view(), name='edit-address'),
-
-
-
-
-
 
     ]
