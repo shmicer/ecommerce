@@ -171,5 +171,4 @@ poetry.toml
 
 .idea/*
 .envs/
-..idea/
-..venv/
+

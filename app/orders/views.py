@@ -36,6 +36,7 @@ def create_order(request):
                                          quantity=item['quantity'],
                                          total=item['price'] * item['quantity'])
             cart.clear()
+            order.send_email()
             return render(request, 'created.html', {'order': order})
     else:
         form = OrderCreateForm

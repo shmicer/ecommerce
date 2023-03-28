@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from .tasks import send_order_email_task
 
 
 # Create your models here.
@@ -29,6 +30,11 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
+
+    def send_email(self):
+        send_order_email_task.delay(
+            self.email, self.id
+        )
 
 
 
