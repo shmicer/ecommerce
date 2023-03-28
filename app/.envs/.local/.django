@@ -1,0 +1,12 @@
+# Django
+# ------------------------------------------------------------------------------
+DJANGO_DEBUG=TRUE
+SECRET_KEY="zjF3df38mwm0Fgw_lDs&ig&!^m55cai*%12341qlt*w#x-s50!^io0sFx)j"
+DJANGO_SETTINGS_MODULE="config.settings.local"
+
+
+GOOGLE_OAUTH2_KEY='845083340407-aqmrh1a4bl7rte4kh5tk7bnhijfg4v4t.apps.googleusercontent.com'
+GOOGLE_OAUTH2_SECRET='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'
+
+VK_OAUTH2_KEY = '51580731'
+VK_OAUTH2_SECRET = 'IndBoqUCdZecpYZACLnv'
