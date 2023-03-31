@@ -1,14 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-
 from .forms import UserCreationForm, UserEditForm
 
 from orders.models import Order
-
 from .models import Address
 
 class RegisterUser(CreateView):
@@ -17,32 +17,11 @@ class RegisterUser(CreateView):
 
     def form_valid(self, form):
         form.save()
-        cd = form.cleaned_data
-        user = authenticate(email=cd['email'], password=cd['password1'])
+        email = form.cleaned_data.get('email')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(email=email, password=password)
         login(self.request, user)
         return redirect('home')
-#
-# class RegisterUser(View):
-#     template_name = 'registration/register.html'
-#
-#     def get(self, request):
-#         context = {
-#             'form': UserCreationForm()
-#         }
-#         return render(request, self.template_name, context)
-#
-#     def post(self, request):
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             cd = form.cleaned_data
-#             user = authenticate(email=cd['email'], password=cd['password1'])
-#             login(request, user)
-#             return redirect('home')
-#         else:
-#             messages.info(request, 'Not valid')
-#             form = UserCreationForm()
-#         return render(request, self.template_name, {'form': form})
 
 
 class ProfileView(LoginRequiredMixin, ListView):

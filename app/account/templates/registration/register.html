@@ -17,9 +17,10 @@
                 {% csrf_token %}
                 <p class="h4 mb-4 text-center">Sign up</p>
 {#                {{ form.as_p }}#}
-
+{##}
                 <label for="exampleInputEmail" class="form-label">Email</label>
                 <input type="email" name="email" class="form-control mb-4" id="exampleInputEmail" placeholder="E-mail">
+                <div class="form-error">{{ form.email.errors }}</div>
                 <label for="exampleInputPassword" class="form-label">Password</label>
                 <input type="password" name="password1" class="form-control" id="exampleInputPassword" placeholder="Password" aria-describedby="defaultRegisterFormPasswordHelpBlock">
                                 <br>
