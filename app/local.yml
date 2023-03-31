@@ -16,7 +16,6 @@ services:
       - ./.envs/.local/.postgres
     depends_on:
       - db
-      - redis
     stdin_open: true
     tty: true
 
@@ -28,26 +27,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .envs/.local/.postgres
-
-  celery:
-      build:
-        context: .
-        dockerfile: compose/local/django/Dockerfile
-      hostname: worker
-      command: celery --app=config worker --loglevel=info
-      volumes:
-        - ./:/usr/src/app
-      env_file:
-        - ./.envs/.local/.django
-      links:
-        - redis
-      depends_on:
-        - web
-        - redis
-
-  redis:
-    image: redis:7.0.5-alpine
-    hostname: redis
 
 volumes:
   postgres_data: {}
