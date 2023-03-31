@@ -2,7 +2,7 @@ version: '3.11'
 
 services:
 
-  web: &web
+  web:
     build:
       context: .
       dockerfile: compose/local/django/Dockerfile
@@ -16,7 +16,6 @@ services:
       - ./.envs/.local/.postgres
     depends_on:
       - db
-      - redis
     stdin_open: true
     tty: true
 
@@ -28,40 +27,6 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .envs/.local/.postgres
-
-  worker:
-    <<: *web
-    command: celery --app=config worker --loglevel=info
-    links:
-      - redis
-    ports: []
-    depends_on:
-      - web
-      - redis
-      - db
-
-  beat:
-    <<: *web
-    command: celery --app=config beat --loglevel=info
-    ports: []
-    depends_on:
-      - web
-      - redis
-      - db
-
-  redis:
-    image: redis:7.0.5-alpine
-    hostname: redis
-
-  flower:
-    <<: *web
-    command: celery --app=config flower --port=5555 --broker=redis://redis:6379/0
-    ports:
-      - "5555:5555"
-    depends_on:
-      - web
-      - redis
-      - worker
 
 volumes:
   postgres_data: {}

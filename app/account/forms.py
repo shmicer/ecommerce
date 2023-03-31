@@ -16,7 +16,7 @@ class UserCreationForm(UserCreationForm):
     )
     class Meta(UserCreationForm.Meta):
         model = User
-        fields = ['email', 'password1', 'password2']
+        fields = ['email']
 
 
 class UserEditForm(forms.ModelForm):
