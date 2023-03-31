@@ -125,7 +125,7 @@ celerybeat.pid
 # Environments
 .env
 .venv
-../venv
+../venv/
 env/
 venv/
 ENV/
@@ -170,5 +170,5 @@ poetry.toml
 # ruff
 .ruff_cache/
 
-../idea/*
-.envs/*
+../idea/
+.envs
