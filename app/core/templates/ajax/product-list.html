@@ -1,0 +1,25 @@
+{% for item in items %}
+    <div class="col-lg-4 col-md-6 mb-4 product-box">
+        <div class="product-card h-100">
+            <div class="product-thumb">
+                <a href="{{ item.get_absolute_url }}"><img src="{{ item.image_url }}" alt=""></a>
+            </div>
+            <div class="product-details">
+                <h6><a href="{{ item.get_absolute_url }}">{{ item.name }}</a></h6>
+                <p>{{ item.description }}</p>
+                <h6><span>{{ item.price|floatformat:0 }}</span> ₽</h6>
+                <div class="card-footer">
+                    <form action="{{ item.get_add_to_cart_url }}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="quantity" hidden="hidden" value="1">
+                        <button class="tn btn-sm btn-primary add-to-cart" type="submit"><i class="fa fa-shopping-cart"></i></button>
+                        <span class="float-right">
+                            4.5/5
+                            <i class="fa fa-star text-warning"></i>
+                        </span>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
