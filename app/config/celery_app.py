@@ -10,7 +10,7 @@ app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
     'send_subscription_mail_every_5_minutes': {
-        'task': 'send_subscription_mail',
+        'task': 'core.tasks.send_subscription_mail',
         'schedule': crontab(minute='*/5')
     },
 }
