@@ -6,6 +6,7 @@ from . import views
 urlpatterns = [
 
     path('register', views.RegisterUser.as_view(), name="register"),
+    path('register_confirm/<token>/', views.register_confirm, name="register_confirm"),
     path('edit/', views.edit_user, name='edit-profile'),
     path('profile', views.ProfileView.as_view(), name='profile'),
     path('orders/', views.OrdersView.as_view(), name='orders'),

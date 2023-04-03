@@ -13,7 +13,7 @@ def checkout(request):
 
 def create_order(request):
     cart = Cart(request)
-    owner = request.user if not request.user.is_anonymous else None
+    owner = request.user if request.user.is_authenticated else None
     addresses = Address.objects.filter(owner=owner, is_pickpoint=False)
     pickpoints = Address.objects.filter(is_pickpoint=True)
     if request.method == 'POST':

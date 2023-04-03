@@ -1,29 +1,59 @@
-from django.contrib import messages
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+import uuid
 
+from django.conf import settings
+from django.core.cache import cache
+from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from .forms import UserCreationForm, UserEditForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 
 from orders.models import Order
 
 from .models import Address
 
+User = get_user_model()
+
 class RegisterUser(CreateView):
     form_class = UserCreationForm
     template_name = 'registration/register.html'
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
-        form.save()
-        cd = form.cleaned_data
-        user = authenticate(email=cd['email'], password=cd['password1'])
-        login(self.request, user)
-        return redirect('home')
-#
+        user = form.save()
+        # cd = form.cleaned_data
+        # user, created = User.objects.get_or_create(email=cd['email'], password=cd['password1'])
+        if not user.is_active:
+            token = uuid.uuid4().hex
+            redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
+            cache.set(redis_key, {'user_id': user.id}, timeout=settings.ECOMMERCE_USER_CONFIRMATION_TIMEOUT)
+
+            confirm_link = self.request.build_absolute_uri(
+                reverse_lazy(
+                    'register_confirm', kwargs={'token': token}
+                )
+            )
+            user.send_confirmation_email(confirm_link)
+        # cd = form.cleaned_data
+        # user = authenticate(email=cd['email'], password=cd['password1'])
+        # login(self.request, user)
+        return super().form_valid(form)
+
+def register_confirm(request, token):
+    redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
+    user_info = cache.get(redis_key) or {}
+
+    if user_id := user_info.get("user_id"):
+        user = get_object_or_404(User, id=user_id)
+        user.is_active = True
+        user.save(update_fields=["is_active"])
+        return redirect(to=reverse_lazy("login"))
+    else:
+        return redirect(to=reverse_lazy("register"))
+
+
 # class RegisterUser(View):
 #     template_name = 'registration/register.html'
 #

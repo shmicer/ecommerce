@@ -1,7 +1,11 @@
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from .tasks import send_confirmation_email_task
 
+# User = get_user_model()
 
 class User(AbstractUser):
     first_name = models.CharField(max_length=50)
@@ -20,6 +24,11 @@ class User(AbstractUser):
     )
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['']
+
+    def send_confirmation_email(self, confirm_link):
+        send_confirmation_email_task.delay(
+            self.email, confirm_link
+    )
 
 
 class Address(models.Model):
