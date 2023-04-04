@@ -1,10 +1,13 @@
-let select = document.getElementById('pickpoint');
-let btnAdd = document.getElementById('pill-tab-1');
-let btnRem = document.getElementById('pill-tab-0');
+$('.delivery_hide').addClass('collapse');
 
-btnAdd.onclick = function() {
-    select.name = 'address';
-}
-btnRem.onclick = function() {
-    select.name -= 'address';
-}
+//on change hide all divs linked to select and show only linked to selected option
+$('#delivery').change(function(){
+    //Saves in a variable the wanted div
+    var selector = '.delivery_' + $(this).val();
+
+    //hide all elements
+    $('.delivery_hide').collapse('hide');
+
+    //show only element connected to selected option
+    $(selector).collapse('show');
+});
