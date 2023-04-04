@@ -13,8 +13,8 @@ def send_subscription_mail_task():
 @shared_task()
 def send_user_email_task(email):
     send_mail(
-        'Your weekly subscription',
-        'We will send you our spam every week',
+        'Your 5 min subscription',
+        'We will send you our spam every 5 min',
         'info@ecommerce.com',
         [email],
         fail_silently=False
