@@ -6,11 +6,11 @@ from .tasks import send_order_email_task
 
 # Create your models here.
 class Order(models.Model):
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    address = models.ForeignKey('account.Address', on_delete=models.CASCADE, null=True)
+    address = models.ForeignKey('account.Address', on_delete=models.SET_NULL, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20)

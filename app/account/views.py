@@ -16,6 +16,7 @@ from .models import Address
 
 User = get_user_model()
 
+
 class RegisterUser(CreateView):
     form_class = UserCreationForm
     template_name = 'registration/register.html'
@@ -23,8 +24,6 @@ class RegisterUser(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        # cd = form.cleaned_data
-        # user, created = User.objects.get_or_create(email=cd['email'], password=cd['password1'])
         if not user.is_active:
             token = uuid.uuid4().hex
             redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
@@ -36,9 +35,6 @@ class RegisterUser(CreateView):
                 )
             )
             user.send_confirmation_email(confirm_link)
-        # cd = form.cleaned_data
-        # user = authenticate(email=cd['email'], password=cd['password1'])
-        # login(self.request, user)
         return super().form_valid(form)
 
 def register_confirm(request, token):
@@ -52,30 +48,6 @@ def register_confirm(request, token):
         return redirect(to=reverse_lazy("login"))
     else:
         return redirect(to=reverse_lazy("register"))
-
-
-# class RegisterUser(View):
-#     template_name = 'registration/register.html'
-#
-#     def get(self, request):
-#         context = {
-#             'form': UserCreationForm()
-#         }
-#         return render(request, self.template_name, context)
-#
-#     def post(self, request):
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             cd = form.cleaned_data
-#             user = authenticate(email=cd['email'], password=cd['password1'])
-#             login(request, user)
-#             return redirect('home')
-#         else:
-#             messages.info(request, 'Not valid')
-#             form = UserCreationForm()
-#         return render(request, self.template_name, {'form': form})
-
 
 class ProfileView(LoginRequiredMixin, ListView):
     model = User
