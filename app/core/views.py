@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView
 from .models import Product, Category, Manufacturer
-from cart.forms import CartAddProductForm
+# from cart.forms import CartAddProductForm
 
 
 class HomeView(ListView):

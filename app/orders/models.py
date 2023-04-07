@@ -1,15 +1,16 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from .tasks import send_order_email_task
 
 
 # Create your models here.
 class Order(models.Model):
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
-    address = models.ForeignKey('account.Address', on_delete=models.CASCADE, null=True)
+    address = models.ForeignKey('account.Address', on_delete=models.SET_NULL, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=20)
@@ -29,6 +30,11 @@ class Order(models.Model):
 
     def get_total_cost(self):
         return sum(item.get_cost() for item in self.items.all())
+
+    def send_email(self):
+        send_order_email_task.delay(
+            self.email, self.id
+        )
 
 
 
