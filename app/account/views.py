@@ -1,40 +1,53 @@
+import uuid
 
-from django.contrib.auth import login, authenticate
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
+from django.core.cache import cache
+from django.contrib.auth import login, authenticate, get_user_model
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
+from .forms import UserCreationForm, UserEditForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
-
-from .forms import UserCreationForm, UserEditForm, AddressForm
 
 from orders.models import Order
 
 from .models import Address
 
+User = get_user_model()
 
-class RegisterUser(View):
+
+class RegisterUser(CreateView):
+    form_class = UserCreationForm
     template_name = 'registration/register.html'
+    success_url = reverse_lazy('home')
 
-    def get(self, request):
-        context = {
-            'form': UserCreationForm()
-        }
-        return render(request, self.template_name, context)
+    def form_valid(self, form):
+        user = form.save()
+        if not user.is_active:
+            token = uuid.uuid4().hex
+            redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
+            cache.set(redis_key, {'user_id': user.id}, timeout=settings.ECOMMERCE_USER_CONFIRMATION_TIMEOUT)
 
-    def post(self, request):
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            cd = form.cleaned_data
-            user = authenticate(email=cd['email'], password=cd['password1'])
-            login(request, user)
-            return redirect('home')
-        else:
-            form = UserCreationForm()
-        return render(request, self.template_name, {'form': form})
+            confirm_link = self.request.build_absolute_uri(
+                reverse_lazy(
+                    'register_confirm', kwargs={'token': token}
+                )
+            )
+            user.send_confirmation_email(confirm_link)
+        return super().form_valid(form)
 
+def register_confirm(request, token):
+    redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
+    user_info = cache.get(redis_key) or {}
+
+    if user_id := user_info.get("user_id"):
+        user = get_object_or_404(User, id=user_id)
+        user.is_active = True
+        user.save(update_fields=["is_active"])
+        return redirect(to=reverse_lazy("login"))
+    else:
+        return redirect(to=reverse_lazy("register"))
 
 class ProfileView(LoginRequiredMixin, ListView):
     model = User
@@ -45,6 +58,7 @@ class ProfileView(LoginRequiredMixin, ListView):
         context['orders'] = Order.objects.filter(customer=self.request.user).select_related('customer')
         return context
 
+
 class OrdersView(LoginRequiredMixin, ListView):
     model = Order
     template_name = 'account/orders.html'
@@ -53,6 +67,7 @@ class OrdersView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['orders'] = Order.objects.filter(customer=self.request.user).select_related('customer')
         return context
+
 
 class OrderView(LoginRequiredMixin, DetailView):
     model = Order
@@ -77,6 +92,7 @@ class AddressView(LoginRequiredMixin, ListView):
         context['addresses'] = context['addresses'].filter(is_pickpoint=False, owner=self.request.user)
         return context
 
+
 class AddAddressView(LoginRequiredMixin, CreateView):
     model = Address
     template_name = 'account/address-form.html'
@@ -87,7 +103,6 @@ class AddAddressView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         self.object.owner.add(self.request.user)
         return super().form_valid(form)
-
 
 
 class UpdateAddressView(LoginRequiredMixin, UpdateView):
@@ -105,7 +120,7 @@ def edit_user(request):
         user_form = UserEditForm(instance=request.user, data=request.POST)
         if user_form.is_valid():
             user_form.save()
-            return redirect('account')
+            return redirect('profile')
     else:
         user_form = UserEditForm(instance=request.user)
         return render(request,

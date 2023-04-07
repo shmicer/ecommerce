@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-<script type="text/javascript" src="{% static 'select-delivery.js' %}"></script>
+
 {% block content %}
 
 <h1>Checkout</h1>
@@ -105,16 +105,5 @@
         <div></div>
     </div>
 {#    This script select the name attribute in pickpoint form to aviod the collision of two equal name attributes of both forms#}
-    <script>
-        let select = document.getElementById('pickpoint');
-        let btnAdd = document.getElementById('pill-tab-1');
-        let btnRem = document.getElementById('pill-tab-0');
-
-        btnAdd.onclick = function() {
-            select.name = 'address';
-        }
-        btnRem.onclick = function() {
-            select.name -= 'address';
-        }
-    </script>
+<script type="text/javascript" src="{% static 'select-delivery.js' %}"></script>
 {% endblock content %}
