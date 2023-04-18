@@ -16,7 +16,6 @@ class ProductDocument(Document):
     class Django:
         model = Product
         fields = [
-            'id',
             'name',
             'description',
             'price',
