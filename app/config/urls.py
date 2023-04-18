@@ -25,6 +25,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('', include('social_django.urls', namespace="social")),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('search', include('search.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

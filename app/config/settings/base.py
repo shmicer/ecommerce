@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'account',
     'debug_toolbar',
     'social_django',
+    'search',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -128,6 +130,12 @@ CACHES = {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'redis://redis:6379/1',
     }
+}
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv("ELASTICSEARCH_DSL_HOSTS", 'localhost:9200')
+    },
 }
 
 # Password validation

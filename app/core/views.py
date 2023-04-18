@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView
 from .models import Product, Category, Manufacturer
-# from cart.forms import CartAddProductForm
 
 
 class HomeView(ListView):
@@ -24,6 +23,11 @@ class ProductDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         return context
 
+
+def search(request):
+    q = request.GET['q']
+    products = Product.objects.filter(name__icontains=q)
+    return render(request, 'search.html', {'products': products})
 
 
 class CategoryView(ListView):
@@ -48,10 +52,6 @@ class ProductView(ListView):
         # context['brands'] = context['items'].distinct().values('manufacturer__name', 'manufacturer__id')
         return context
 
-def search(request):
-    q = request.GET['q']
-    products = Product.objects.filter(name__icontains=q)
-    return render(request, 'search.html', {'products':products})
 
 def filter_data(request):
     cats = request.GET.getlist('category[]')

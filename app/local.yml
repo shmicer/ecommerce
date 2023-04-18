@@ -17,6 +17,7 @@ services:
     depends_on:
       - db
       - redis
+      - es
     stdin_open: true
     tty: true
 
@@ -62,6 +63,13 @@ services:
       - web
       - redis
       - worker
+
+  es:
+    image: elasticsearch:7.8.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
 
 volumes:
   postgres_data: {}

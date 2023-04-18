@@ -33,9 +33,5 @@ def create_order(request):
             return render(request, 'created.html', {'order': order})
     else:
         form = OrderCreateForm
-    context = {'cart': cart,'form': form, 'pickpoints': pickpoints, 'addresses': addresses}
+    context = {'cart': cart, 'form': form, 'pickpoints': pickpoints, 'addresses': addresses}
     return render(request, 'create.html', context=context)
-
-
-
-
