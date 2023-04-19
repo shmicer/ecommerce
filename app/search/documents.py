@@ -18,7 +18,5 @@ class ProductDocument(Document):
         fields = [
             'name',
             'description',
-            'price',
-            'image',
         ]
 

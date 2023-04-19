@@ -13,9 +13,8 @@ def search(request):
         fields=[
             'name',
             'description',
-            'price',
-            'image',
         ],
         fuzziness='auto')
-    products = ProductDocument.search().query(q)
+    search = ProductDocument.search().query(q)
+    products = search.to_queryset
     return render(request, 'search.html', {'products': products})
