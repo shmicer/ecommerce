@@ -17,7 +17,7 @@ services:
     depends_on:
       - db
       - redis
-      - es
+      - elasticsearch
     stdin_open: true
     tty: true
 
@@ -64,12 +64,28 @@ services:
       - redis
       - worker
 
-  es:
-    image: elasticsearch:7.8.1
+  elasticsearch:
+    image: elasticsearch:8.7.0
     environment:
       - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
     ports:
-      - "9200:9200"
+      - target: 9200
+        published: 9200
+
+  kibana:
+    image: kibana:8.7.0
+    ports:
+      - target: 5601
+        published: 5601
+    depends_on:
+      - elasticsearch
+
 
 volumes:
   postgres_data: {}
+  es_data:
+    driver: local
