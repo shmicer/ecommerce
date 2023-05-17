@@ -7,6 +7,7 @@ from .tasks import send_confirmation_email_task
 
 # User = get_user_model()
 
+
 class User(AbstractUser):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)

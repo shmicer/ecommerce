@@ -31,17 +31,20 @@ def add_to_cart(request, product_id):
         messages.info(request, 'NoSuccess')
     return redirect('home')
 
+
 def remove_from_cart(request, product_id):
     cart = Cart(request)
     item = get_object_or_404(Product, id=product_id)
     cart.remove(item)
     return redirect('cart')
 
+
 def increase_quantity(request, product_id):
     cart = Cart(request)
     item = get_object_or_404(Product, id=product_id)
     cart.increase_quantity(item)
     return redirect('cart')
+
 
 def decrease_quantity(request, product_id):
     cart = Cart(request)

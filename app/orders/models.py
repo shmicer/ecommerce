@@ -37,7 +37,6 @@ class Order(models.Model):
         )
 
 
-
 class OrderItem(models.Model):
     order = models.ForeignKey('orders.Order', related_name='items', on_delete=models.SET_NULL, null=True)
     product = models.ForeignKey('core.Product', related_name='order_items', on_delete=models.SET_NULL, null=True)

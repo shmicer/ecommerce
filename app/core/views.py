@@ -35,7 +35,8 @@ class CategoryView(ListView):
     context_object_name = 'categories'
     template_name = 'category_list.html'
 
-class BrandView(ListView):
+
+class ManufacturerView(ListView):
     model = Manufacturer
     context_object_name = 'brands'
     template_name = 'brand_list.html'
