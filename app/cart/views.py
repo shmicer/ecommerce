@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import CreateView, FormView
 
 from core.models import Product
 from django.views import View
@@ -17,19 +18,19 @@ class CartView(View):
         return render(self.request, 'cart.html')
 
 
-def add_to_cart(request, product_id):
-    cart = Cart(request)
-    item = get_object_or_404(Product, id=product_id)
-    form = CartAddProductForm(request.POST)
-    if form.is_valid():
+class AddToCartView(FormView):
+    success_url = 'home'
+    form_class = CartAddProductForm
+
+    def form_valid(self, form):
+        cart = Cart(self.request)
+        item = get_object_or_404(Product, id=self.request.product_id)
         cd = form.cleaned_data
         cart.add(product=item,
                  quantity=cd['quantity'],
                  update_quantity=cd['update'])
-        messages.success(request, 'Success')
-    else:
-        messages.info(request, 'NoSuccess')
-    return redirect('home')
+        return super().form_valid(form)
+
 
 def remove_from_cart(request, product_id):
     cart = Cart(request)
@@ -37,11 +38,13 @@ def remove_from_cart(request, product_id):
     cart.remove(item)
     return redirect('cart')
 
+
 def increase_quantity(request, product_id):
     cart = Cart(request)
     item = get_object_or_404(Product, id=product_id)
     cart.increase_quantity(item)
     return redirect('cart')
+
 
 def decrease_quantity(request, product_id):
     cart = Cart(request)

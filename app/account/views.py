@@ -2,7 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.core.cache import cache
-from django.contrib.auth import login, authenticate, get_user_model
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -27,7 +27,10 @@ class RegisterUser(CreateView):
         if not user.is_active:
             token = uuid.uuid4().hex
             redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
-            cache.set(redis_key, {'user_id': user.id}, timeout=settings.ECOMMERCE_USER_CONFIRMATION_TIMEOUT)
+            cache.set(redis_key,
+                      {'user_id': user.id},
+                      timeout=settings.ECOMMERCE_USER_CONFIRMATION_TIMEOUT
+                      )
 
             confirm_link = self.request.build_absolute_uri(
                 reverse_lazy(
@@ -36,6 +39,7 @@ class RegisterUser(CreateView):
             )
             user.send_confirmation_email(confirm_link)
         return super().form_valid(form)
+
 
 def register_confirm(request, token):
     redis_key = settings.ECOMMERCE_USER_CONFIRMATION_KEY.format(token=token)
@@ -48,6 +52,7 @@ def register_confirm(request, token):
         return redirect(to=reverse_lazy("login"))
     else:
         return redirect(to=reverse_lazy("register"))
+
 
 class ProfileView(LoginRequiredMixin, ListView):
     model = User
@@ -89,7 +94,11 @@ class AddressView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['addresses'] = context['addresses'].filter(is_pickpoint=False, owner=self.request.user)
+        context['addresses'] = context['addresses']\
+            .filter(
+            is_pickpoint=False,
+            owner=self.request.user
+        )
         return context
 
 
@@ -126,5 +135,3 @@ def edit_user(request):
         return render(request,
                       'account/edit-profile.html',
                       {'user_form': user_form})
-
-
