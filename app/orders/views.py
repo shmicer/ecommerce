@@ -1,35 +1,31 @@
-from django.shortcuts import render
+from django.urls import reverse_lazy, reverse
+from django.views.generic import TemplateView
+
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
 
 from cart.cart import Cart
 
 from account.models import Address
-from django.views import View
-from django.views.generic.edit import CreateView, FormView
+from django.views.generic.edit import FormView
 
 
-class OrderCheckoutView(View):
-    template_name = 'create.html'
-
-
-class OrderView(FormView):
+class OrderCreateView(FormView):
     model = Order
-    form = OrderCreateForm
-    context_object_name = 'items'
     template_name = 'create.html'
-    success_url = 'created.html'
+    form_class = OrderCreateForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['owner'] = self.request.user if self.request.user.is_authenticated else None
         context['addresses'] = Address.objects.filter(owner=context['owner'], is_pickpoint=False)
         context['pickpoints'] = Address.objects.filter(is_pickpoint=True)
+        return context
 
     def form_valid(self, form):
-        cart = Cart()
+        cart = Cart(self.request)
         order = form.save()
-        order.customer = self.context['owner']
+        order.customer = self.request.user if self.request.user.is_authenticated else None
         order.save()
         for item in cart:
             OrderItem.objects.create(product=item['product'],

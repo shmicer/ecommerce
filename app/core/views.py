@@ -19,10 +19,6 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'product.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
 
 # def search(request):
 #     q = request.GET['q']
@@ -62,5 +58,5 @@ def filter_data(request):
         all_products = all_products.filter(category_id__in=cats).distinct()
     # if len(brands) > 0:
     #     all_products = all_products.filter(manufacturer__id__in=brands).distinct()
-    t=render_to_string('ajax/product-list.html', {'items': all_products})
+    t = render_to_string('ajax/product-list.html', {'items': all_products})
     return JsonResponse({'items': t})
