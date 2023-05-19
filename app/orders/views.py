@@ -17,8 +17,7 @@ class OrderCreateView(FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['owner'] = self.request.user if self.request.user.is_authenticated else None
-        context['addresses'] = Address.objects.filter(owner=context['owner'], is_pickpoint=False)
+        context['addresses'] = Address.objects.filter(owner=self.request.user.id, is_pickpoint=False)
         context['pickpoints'] = Address.objects.filter(is_pickpoint=True)
         return context
 

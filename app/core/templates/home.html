@@ -1,38 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<!-- Home Slider -->
-{#<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">#}
-{#  <ol class="carousel-indicators">#}
-{#    {% for banner in banners %}#}
-{#    {% if forloop.counter == 1 %}#}
-{#    <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter}}" class="active"></li>#}
-{#    {% else %}#}
-{#    <li data-target="#carouselExampleIndicators" data-slide-to="{{forloop.counter}}"></li>#}
-{#    {% endif %}#}
-{#    {% endfor %}#}
-{#  </ol>#}
-{#  <div class="carousel-inner">#}
-{#    {% for banner in banners %}#}
-{#    {% if forloop.counter == 1 %}#}
-{#    <div class="carousel-item active">#}
-{#      {% else %}#}
-{#      <div class="carousel-item">#}
-{#      {% endif %}#}
-{#      <img src="/media/{{banner.img}}" class="d-block w-100" alt="...">#}
-{#    </div>#}
-{#    {% endfor %}#}
-{#  </div>#}
-{#  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">#}
-{#    <span class="carousel-control-prev-icon" aria-hidden="true"></span>#}
-{#    <span class="sr-only">Previous</span>#}
-{#  </a>#}
-{#  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">#}
-{#    <span class="carousel-control-next-icon" aria-hidden="true"></span>#}
-{#    <span class="sr-only">Next</span>#}
-{#  </a>#}
-{#</div>#}
-{#</div>#}
 <main class="container my-4">
 	<!-- Featured Products -->
 	<h3 class="my-4 border-bottom pb-1">Featured Products</h3>
@@ -67,51 +35,3 @@
 	<p class="my-4 text-center"><a href="{% url 'product-list' %}" class="btn btn-dark btn-sm">All Products <i class="fa fa-long-arrow-alt-right"></i></a></p>
 </main>
 {% endblock %}
-
-{#{% extends 'base.html' %}#}
-{#{% load static %}#}
-{#{% block content %}#}
-{##}
-{#    <h1>Store</h1>#}
-{# <div class="home-container">#}
-{#     <div>#}
-{#        {% include 'categories_component.html' %}#}
-{#     </div>#}
-{#    <div class="row">#}
-{#        <small style="position: relative">{{ items|length }} items on page</small>#}
-{#         <div class="row row-cols-1 row-cols-sm-2 row-cols-mz-3 g-3">#}
-{#        {% for item in items %}#}
-{#            <div class="col-lg-4 col-sm-6 mb-3">#}
-{#					<div class="product-card">#}
-{#						<div class="product-thumb">#}
-{#							<a href="{{ item.get_absolute_url }}"><img src="{{ item.image_url }}" alt=""></a>#}
-{#						</div>#}
-{#						<div class="product-details">#}
-{#							<h4><a href="#">{{ item.name }}</a></h4>#}
-{#							<p>{{ item.description }}</p>#}
-{#							<div class="product-bottom-details d-flex justify-content-between">#}
-{#								<div class="product-price">#}
-{#									{{ item.price|floatformat:0 }} ₽#}
-{#								</div>#}
-{#							</div>#}
-{#                            <div class="product-links">#}
-{#                                <form action="{{ item.get_add_to_cart_url }}" method="post">#}
-{#                                    {{ cart_product_form }}#}
-{#                                    {% csrf_token %}#}
-{#                                    <input src="{% static 'images/cart.png' %}" type="submit" value="Add to cart">#}
-{#                                </form>#}
-{#									<a href="{{ item.get_add_to_cart_url }}">#}
-{#                                    <img id="cart-icon" src="{% static 'images/cart.png' %}">#}
-{#                                    </a>#}
-{#                            </div>#}
-{#						</div>#}
-{#					</div>#}
-{#				</div>#}
-{#        {% endfor %}#}
-{#    </div>#}
-{##}
-{#    </div>#}
-{##}
-{##}
-{# </div>#}
-{#{% endblock content %}#}

@@ -18,18 +18,16 @@ class CartView(View):
         return render(self.request, 'cart.html')
 
 
-class AddToCartView(FormView):
-    success_url = 'home'
-    form_class = CartAddProductForm
-
-    def form_valid(self, form):
-        cart = Cart(self.request)
-        item = get_object_or_404(Product, id=self.request.product_id)
+def add_to_cart(request, product_id):
+    cart = Cart(request)
+    item = get_object_or_404(Product, id=product_id)
+    form = CartAddProductForm(request.POST)
+    if form.is_valid():
         cd = form.cleaned_data
         cart.add(product=item,
                  quantity=cd['quantity'],
                  update_quantity=cd['update'])
-        return super().form_valid(form)
+    return redirect('home')
 
 
 def remove_from_cart(request, product_id):
